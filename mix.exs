@@ -1,8 +1,8 @@
 defmodule RequestTimeout.Mixfile do
   use Mix.Project
 
-  def project, do:
-    [
+  def project,
+    do: [
       app: :request_timeout,
       version: "1.0.0",
       elixir: "~> 1.8",
@@ -10,33 +10,33 @@ defmodule RequestTimeout.Mixfile do
       aliases: aliases(),
       package: package(),
       description: description(),
-      source_url: "http://github.com/fenollp/elixir-phoenix-request_timeout"
+      source_url: package()[:links]["Github"]
     ]
 
-  def application, do:
-    [applications: []]
+  def application, do: [extra_applications: [:logger, :runtime_tools]]
 
   defp aliases,
     do: [
-      compile: ["format", "compile"]
+      compile: ["format", "compile"],
+      test: ["format", "test"]
     ]
 
-  defp deps, do:
-    [
-      {:plug, 1..7 |> Enum.map(&("~> 1.#{&1}")) |> Enum.join(" or ")}
+  defp deps,
+    do: [
+      {:plug, 1..7 |> Enum.map(&"~> 1.#{&1}") |> Enum.join(" or ")}
     ]
 
-  defp description, do:
-    """
+  defp description,
+    do: """
     An elixir plug that kills long running Phoenix controllers before
     they take your node down. A kind of circuit breaker.
     """
 
-  defp package, do:
-    [
-      files: ~w(lib/request_timeout.ex mix.exs mix.lock README.md LICENSE),
+  defp package,
+    do: [
+      files: ~w(lib/request_timeout.ex lib/sup.ex mix.exs mix.lock README.md LICENSE),
       maintainers: ["Pierre Fenoll"],
       licenses: ["MIT"],
-      links: %{"Github" => project() |> Keyword.fetch!(:source_url)}
+      links: %{"Github" => "http://github.com/fenollp/elixir-phoenix-request_timeout"}
     ]
 end
