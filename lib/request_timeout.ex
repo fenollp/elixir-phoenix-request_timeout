@@ -42,35 +42,37 @@ defmodule RequestTimeout do
 
   @doc false
   def call(conn = %Conn{}, opts = %__MODULE__{sup: sup}) do
+    md = Logger.metadata()
     parent = self()
 
     if is_nil(sup) do
-      _child = spawn(fn -> circuit_breaker(conn, parent, opts) end)
+      _child = spawn(fn -> circuit_breaker(md, conn, parent, opts) end)
     else
       # TODO: spawn under sup
+      throw(:not_implemented!)
     end
 
     conn
   end
 
-  defp circuit_breaker(conn, parent, %__MODULE__{
+  defp circuit_breaker(md, conn, parent, %__MODULE__{
          after: ms,
          code: code,
          ct: ct,
          err: err,
          msg: msg
        }) do
+    :ok = Logger.metadata(md)
     ref = Process.monitor(parent)
 
     receive do
       {:DOWN, ^ref, :process, ^parent, reason} ->
-        Logger.debug("parent=#{inspect(parent)} died with #{reason}")
+        Logger.debug("#{inspect(parent)} died with #{reason}")
         true = Process.demonitor(ref)
     after
       ms ->
         Logger.warn(
-          "parent=#{inspect(parent)} took longer than #{ms}ms, " <>
-            "sending #{code} and exiting with #{err}"
+          "#{inspect(parent)} took longer than #{ms}ms, sending #{code} and exiting with #{err}"
         )
 
         true = Process.demonitor(ref)
@@ -80,6 +82,8 @@ defmodule RequestTimeout do
         |> send_resp(code, msg)
         |> halt()
 
+        {:current_stacktrace, st} = Process.info(parent, :current_stacktrace)
+        Logger.error("\n#{Exception.format_stacktrace(st)}")
         Process.exit(parent, err)
     end
   end
