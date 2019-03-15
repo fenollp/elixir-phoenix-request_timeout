@@ -21,19 +21,20 @@ defmodule RequestTimeout.Test do
     defmodule TestPlug.Slow do
       use Plug.Builder
       import Plug.Conn
-      plug(RequestTimeout, after: 200)
+      plug(RequestTimeout, after: 100, error: :die!)
       plug(:index)
 
       defp index(conn, _opts) do
-        Process.sleep(1_000)
-        conn |> send_resp(200, "[]")
+        Process.sleep(300)
+        conn |> send_resp(201, "")
       end
     end
 
+    trap = Process.flag(:trap_exit, true)
     conn = conn(:get, "/", %{}) |> TestPlug.Slow.call(%{})
+    assert_receive {:EXIT, _, :die!}, 500
+    # NOTE: this is a lie. It seems the Plug.Test conn map is unhindered by halt/1
     assert conn.state == :sent
-    assert conn.status == 508
-    assert get_resp_header(conn, "content-type") == ["text/plain"]
-    assert conn.resp_body == "Resource Limit Reached"
+    Process.flag(:trap_exit, trap)
   end
 end
