@@ -1,5 +1,5 @@
 # [RequestTimeout](https://github.com/fenollp/elixir-phoenix-request_timeout)
-[![Build Status](https://travis-ci.com/fenollp/elixir-phoenix-request_timeout.svg?branch=master)](https://travis-ci.com/fenollp/elixir-phoenix-request_timeout)
+[![Build Status](https://travis-ci.org/fenollp/elixir-phoenix-request_timeout.svg?branch=master)](https://travis-ci.org/fenollp/elixir-phoenix-request_timeout/builds)
 [![Hex.pm](https://img.shields.io/hexpm/v/request_timeout.svg)](https://hex.pm/packages/request_timeout)
 
 
