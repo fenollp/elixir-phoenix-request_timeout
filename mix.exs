@@ -34,7 +34,6 @@ defmodule RequestTimeout.Mixfile do
 
   defp package,
     do: [
-      files: ~w(lib/request_timeout.ex lib/sup.ex mix.exs mix.lock README.md LICENSE),
       maintainers: ["Pierre Fenoll"],
       licenses: ["MIT"],
       links: %{"Github" => "http://github.com/fenollp/elixir-phoenix-request_timeout"}
