@@ -67,7 +67,7 @@ defmodule RequestTimeout do
 
     receive do
       {:DOWN, ^ref, :process, ^parent, reason} ->
-        Logger.debug("#{inspect(parent)} died with #{reason}")
+        Logger.debug("#{inspect(parent)} died with #{inspect(reason)}")
         true = Process.demonitor(ref)
     after
       ms ->
