@@ -4,7 +4,7 @@ defmodule RequestTimeout.Mixfile do
   def project,
     do: [
       app: :request_timeout,
-      version: "1.0.1",
+      version: "1.1.0",
       elixir: "~> 1.8",
       deps: deps(),
       aliases: aliases(),
@@ -23,7 +23,7 @@ defmodule RequestTimeout.Mixfile do
 
   defp deps,
     do: [
-      {:plug, 1..7 |> Enum.map(&"~> 1.#{&1}") |> Enum.join(" or ")},
+      {:plug, 1..8 |> Enum.map(&"~> 1.#{&1}") |> Enum.join(" or ")},
       {:ex_doc, "~> 0.14", only: :dev, runtime: false}
     ]
 
